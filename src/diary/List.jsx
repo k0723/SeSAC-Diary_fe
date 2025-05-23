@@ -52,7 +52,7 @@ const List = () => {
           ))}
         </ul>
       )}
-      <button onClick={() => navigate("/regist")}>이벤트 등록</button>
+      <button onClick={() => navigate("/regist")}>일기 등록</button>
     </>
   );
 };
