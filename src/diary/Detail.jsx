@@ -17,7 +17,7 @@ const Detail = () => {
         setLoading(false);
       })
       .catch((err) => {
-        setError('이벤트 정보를 불러오는 데 실패했습니다.');
+        setError('일기 정보를 불러오는 데 실패했습니다.');
         setLoading(false);
       });
   }, [event_id]);
@@ -33,7 +33,7 @@ const Detail = () => {
       <p><strong>설명:</strong> {event.description}</p>
       <p><strong>위치:</strong> {event.location}</p>
       <p><strong>태그:</strong> {event.tags}</p>
-      <p><strong>이벤트 ID:</strong> {event.id}</p>
+      <p><strong>일기 ID:</strong> {event.id}</p>
     </div>
   );
 };

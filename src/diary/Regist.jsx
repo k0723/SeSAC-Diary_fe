@@ -7,13 +7,13 @@ import { useNavigate } from "react-router-dom";
 
 export default function Regist() {
     const navigator = useNavigate();
-    
+
     const [form, setForm] = useState({
-        id: '', 
-        title: '', 
+        id: '',
+        title: '',
         // image: '', 
-        content: '', 
-        private: '', 
+        content: '',
+        private: '',
     });
 
     // const { id, title, image, description, tags, location } = form;
@@ -25,7 +25,7 @@ export default function Regist() {
     };
 
 
-    const handleChange = e => setForm({...form, [e.target.name]: e.target.value});
+    const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
     const handleSubmit = e => {
         e.preventDefault();
 
@@ -66,7 +66,19 @@ export default function Regist() {
                 <input onChange={handleChange} value={title} type="text" name="title" placeholder="제목을 입력하세요." />
                 <input onChange={handleChange} value={content} type="text" name="content" placeholder="내용을 입력하세요." />
                 <input onChange={handleChangeFile} type="file" name="image" />
-                <input onChange={handleChange} value={state} type="checkbox" name="state" placeholder="공개 하시려면 체크하세요." />
+                {/* <input onChange={handleChange} value={state} type="checkbox" name="state" placeholder="공개 하시려면 체크하세요." /> */}
+                <input
+                    type="checkbox"
+                    name="state"
+                    checked={form.state === "공개"}
+                    onChange={(e) =>
+                        setForm({
+                            ...form,
+                            state: e.target.checked ? "공개" : "비공개"
+                        })
+                    }
+                />
+                <label htmlFor="state">공개하시려면 체크하세요.</label>
                 <button type="submit">등록</button>
             </form>
         </>
