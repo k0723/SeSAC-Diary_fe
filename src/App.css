@@ -1,42 +1,92 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* 전체 폰트 및 배경 설정 */
+body {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 10px 30px;
+    color: #333;
+    display: flex;
+    align-items: flex-start
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* 제목 스타일 */
+h1,
+h2,
+h3 {
+    color: #222;
+    margin-bottom: 10px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 폼 스타일 */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0px;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* 입력창 스타일 */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-.card {
-  padding: 2em;
+/* 버튼 스타일 */
+button {
+    padding: 10px;
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
 }
 
-.read-the-docs {
-  color: #888;
+button:hover {
+    background-color: #45a049;
+}
+
+/* 이벤트 목록 컨테이너 */
+ul {
+    list-style-type: none;
+    padding: 0;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+/* 이벤트 아이템 스타일 */
+li {
+    background-color: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.05);
+}
+
+li img {
+    display: block;
+    margin-top: 10px;
+    border-radius: 4px;
+}
+
+/* 링크 스타일 */
+a {
+    text-decoration: none;
+    color: #0077cc;
+}
+
+a:hover {
+    text-decoration: underline;
 }
