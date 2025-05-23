@@ -21,7 +21,7 @@ export default function Login() {
             .then(res => {
                 console.log(res);
                 if (res.status === 200) {
-                    // 메시지를 출력 -> 토큰을 저장 -> 이벤트 목록으로 이동
+                    // 메시지를 출력 -> 토큰을 저장 -> 일기장 목록으로 이동
                     alert(res.data.message);
                     window.sessionStorage.setItem("access_token", res.data.access_token);
                     navigate("/list");
