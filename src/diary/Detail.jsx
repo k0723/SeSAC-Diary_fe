@@ -11,7 +11,7 @@ const Detail = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/events/${event_id}`)
+    axios.get(`http://localhost:8000/diarys/${diary_id}`)
       .then((response) => {
         setEvent(response.data);
         setLoading(false);
@@ -24,7 +24,7 @@ const Detail = () => {
 
   if (loading) return <p>로딩 중...</p>;
   if (error) return <p>{error}</p>;
-  if (!event) return <p>이벤트 정보가 없습니다.</p>;
+  if (!event) return <p>일기 정보가 없습니다.</p>;
 
   return (
     <div>

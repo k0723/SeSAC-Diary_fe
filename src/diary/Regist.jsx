@@ -12,13 +12,12 @@ export default function Regist() {
         id: '', 
         title: '', 
         // image: '', 
-        description: '', 
-        tags: '', 
-        location: ''
+        content: '', 
+        private: '', 
     });
 
     // const { id, title, image, description, tags, location } = form;
-    const { id, title, description, tags, location } = form;
+    const { id, title, content, state } = form;
 
     const [image, setImage] = useState(null);
     const handleChangeFile = e => {
@@ -41,7 +40,7 @@ export default function Regist() {
                 { id, title, image, description, tags, location }, 
                 { headers: { Authorization: `Bearer ${token}` } })
             */
-            .post("http://localhost:8000/events/",
+            .post("http://localhost:8000/diarys/",
                 formData,
                 {
                     headers: {
@@ -61,14 +60,13 @@ export default function Regist() {
 
     return (
         <>
-            <h2>이벤트 등록</h2>
+            <h2>일기 등록</h2>
             <form onSubmit={handleSubmit}>
-                <input onChange={handleChange} value={id} type="number" name="id" placeholder="이벤트 ID를 입력하세요." />
-                <input onChange={handleChange} value={title} type="text" name="title" placeholder="이벤트 제목을 입력하세요." />
+                <input onChange={handleChange} value={id} type="number" name="id" placeholder="일기 번호를 입력하세요." />
+                <input onChange={handleChange} value={title} type="text" name="title" placeholder="제목을 입력하세요." />
+                <input onChange={handleChange} value={content} type="text" name="content" placeholder="내용을 입력하세요." />
                 <input onChange={handleChangeFile} type="file" name="image" />
-                <input onChange={handleChange} value={description} type="text" name="description" placeholder="이벤트 설명을 입력하세요." />
-                <input onChange={handleChange} value={tags} type="text" name="tags" placeholder="이벤트 관련 태그를 입력하세요." />
-                <input onChange={handleChange} value={location} type="text" name="location" placeholder="이벤트 위치를 입력하세요." />
+                <input onChange={handleChange} value={state} type="checkbox" name="state" placeholder="공개 하시려면 체크하세요." />
                 <button type="submit">등록</button>
             </form>
         </>

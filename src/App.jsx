@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes, Link, Outlet, useNavigate } from "react-router-dom";
-import List from "./event/List";
-import Regist from "./event/Regist";
-import Detail from "./event/Detail";
+import List from "./diary/List";
+import Regist from "./diary/Regist";
+import Detail from "./diary/Detail";
 import Login from "./user/Login";
 import { useEffect, useState } from "react";
 
@@ -34,7 +34,7 @@ function Layout() {
 
     return (
         <>
-            <h1>이벤트 관리 시스템</h1>
+            <h1>새싹 일기장</h1>
             <hr />
             <header>
                 {
@@ -49,7 +49,7 @@ function Layout() {
                 <Outlet />
             </main>
             <footer>
-                <p>이벤트 관리 시스템 © 2023</p>
+                <p>새싹 일기장 © 2025</p>
             </footer>
         </>
     );
@@ -64,7 +64,7 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/regist" element={<Regist />} />
                         <Route path="/list" element={<List />} />
-                        <Route path="/detail/:event_id" element={<Detail />} />
+                        <Route path="/detail/:_id" element={<Detail />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
