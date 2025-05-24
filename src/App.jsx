@@ -4,6 +4,7 @@ import Regist from "./diary/Regist";
 import Detail from "./diary/Detail";
 import Login from "./user/Login";
 import { useEffect, useState } from "react";
+import DiaryUpload from "./diary/DiaryUpload"; 
 
 function Layout() {
     const [isLogin, setIsLogin] = useState(false);
@@ -65,6 +66,7 @@ function App() {
                         <Route path="/regist" element={<Regist />} />
                         <Route path="/list" element={<List />} />
                         <Route path="/detail/:_id" element={<Detail />} />
+                        <Route path="/diary/upload" element={<DiaryUpload />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
