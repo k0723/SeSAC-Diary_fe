@@ -55,7 +55,6 @@ export default function Regist() {
         // 3. 실제 이미지 URL 구성
         image_url = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`;
       }
-
       // 4. 일기 등록 요청
       const res = await axios.post("http://localhost:8000/diarys/", {
         id: parseInt(form.id),
