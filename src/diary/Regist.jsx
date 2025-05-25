@@ -3,27 +3,25 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const bucketName = import.meta.env.VITE_S3_BUCKET;
-const region = import.meta.env.VITE_S3_REGION;
 
 export default function Regist() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    id: '',
-    title: '',
-    content: '',
-    private: false,
+    id: "",
+    title: "",
+    content: "",
+    state: "public", // 기본값
   });
   const [image, setImage] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm({
-      ...form,
-      [name]: type === "checkbox" ? checked : value,
-    });
-  };
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setForm({
+    ...form,
+    [name]: value,
+  });
+};
 
   const handleChangeFile = (e) => {
     setImage(e.target.files[0]);
@@ -37,13 +35,13 @@ export default function Regist() {
       let image_url = "";
 
       if (image) {
+
+        const ext = image.name.split('.').pop().toLowerCase();
         // 1. Presigned URL 요청
-        const presignedRes = await axios.get("http://localhost:8000/diarys/presigned-url?file_type=image/jpeg", {
+        const presignedRes = await axios.get(`http://localhost:8000/diarys/presigned-url?file_type=${ext}`, {
   headers: { Authorization: `Bearer ${token}` }
 });
         const { url, key } = presignedRes.data;
-        console.log("Presigned URL:", url);
-        console.log("Key:", key);
 
         // 2. 이미지 S3 업로드
         await axios.put(url, image, {
@@ -52,15 +50,15 @@ export default function Regist() {
          }
         });
 
-        // 3. 실제 이미지 URL 구성
-        image_url = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`;
+        // 3. 실제 이미지 KEY 저장장
+        image_url = key;
       }
       // 4. 일기 등록 요청
       const res = await axios.post("http://localhost:8000/diarys/", {
         id: parseInt(form.id),
         title: form.title,
         content: form.content,
-        private: form.private,
+        state: form.state,
         image: image_url,
       }, {
         headers: {
@@ -107,12 +105,11 @@ export default function Regist() {
         />
         <input type="file" onChange={handleChangeFile} />
         <label>
-          <input
-            type="checkbox"
-            name="private"
-            checked={form.private}
-            onChange={handleChange}
-          /> 비공개
+          상태:
+          <select name="state" value={form.state} onChange={handleChange}>
+            <option value="public">공개</option>
+            <option value="private">비공개</option>
+          </select>
         </label>
         <br />
         <button type="submit">등록</button>
