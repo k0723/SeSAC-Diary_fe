@@ -3,8 +3,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link,useNavigate } from 'react-router-dom';
 
+<<<<<<< HEAD
 const List = () => {``
   const [diarys, setEvents] = useState([]);
+=======
+const List = () => {
+  const [diarys, setDiarys] = useState([]);
+>>>>>>> b6f583d50c8594790951bb35018130aa0c1c24be
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -45,7 +50,7 @@ const List = () => {``
   useEffect(() => {
     axios.get('http://localhost:8000/diarys/')
       .then((response) => {
-        setEvents(response.data);
+        setDiarys(response.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -66,13 +71,14 @@ const List = () => {``
         <ul>
           {diarys.map((diary) => (
             <li key={diary.id} style={{ marginBottom: '20px' }}>
+              <p><strong>번호:</strong> {diary.id}</p>
               <h3><Link to={`/detail/${diary.id}`}>{diary.title}</Link></h3>
               {diary.image && imageUrls[diary.id] && (
                 <img src={imageUrls[diary.id]} alt={diary.title} style={{ width: '200px' }} />
               )}
-              <p><strong>설명:</strong> {diary.description}</p>
+              {/* <p><strong>설명:</strong> {diary.description}</p>
               <p><strong>위치:</strong> {diary.location}</p>
-              <p><strong>태그:</strong> {diary.tags}</p>
+              <p><strong>태그:</strong> {diary.tags}</p> */}
             </li>
           ))}
         </ul>
