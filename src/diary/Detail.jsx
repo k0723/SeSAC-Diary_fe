@@ -88,9 +88,11 @@ const Detail = () => {
           )}
         </div>
       )}
-      <p><strong>내용:</strong> {event.content}</p>
-      <p><strong>상태:</strong> {event.state}</p>
-      <p><strong>일기 ID:</strong> {event.id}</p>
+      <p><strong></strong> {event.content}</p>
+      <p><strong>공개여부:</strong> {event.state ? "공개" : "비공개"}</p>
+
+      {/* <p><strong>일기 ID:</strong> {event.id}</p> */}
+      {/* <p><strong>작성일:</strong> {new Date(event.created_at).toLocaleDateString()}</p> */}
     </div>
   );
 };
