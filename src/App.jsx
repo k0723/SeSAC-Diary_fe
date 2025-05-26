@@ -4,8 +4,9 @@ import Regist from "./diary/Regist";
 import Detail from "./diary/Detail";
 import Login from "./user/Login";
 import { useEffect, useState } from "react";
-import DiaryUpload from "./diary/DiaryUpload"; 
+import DiaryUpload from "./diary/DiaryUpload";
 import OauthHandler from "./user/OauthHandler";
+import UserRegForm from "./user/UserRegForm.jsx";
 
 function Layout() {
     const [isLogin, setIsLogin] = useState(false);
@@ -16,7 +17,7 @@ function Layout() {
     };
 
     const navigate = useNavigate();
-    
+
     useEffect(() => {
         const token = window.sessionStorage.getItem("access_token");
         if (token) {
@@ -25,29 +26,33 @@ function Layout() {
             setIsLogin(false);
         }
     });
-
+/*
     useEffect(() => {
-        if(isLogin) {
+        if(isLogin && location.pathname === "/userregform") {
             navigate("/list");
-        } else {
+        } else if (isLogin) {
+            navigate("/list");
+        } else if (location.pathname !== "/userregform") {
+
             navigate("/login");
         }
-    }, [isLogin]);
+
+    }, [isLogin, navigate]);*/
 
     return (
         <>
             <h1>새싹 일기장</h1>
             <hr />
-            {location.pathname !== "/login" && (
-            <header>
-                {
-                    isLogin ? (
-                        <a onClick={handleLogout}>로그아웃</a>
-                    ) : (
-                        <Link to="/login">로그인</Link>
-                    )
-                }
-            </header>
+            {location.pathname !== "/login" &&  (
+                <header>
+                    {
+                        isLogin ? (
+                            <a onClick={handleLogout}>로그아웃</a>
+                        ) : (
+                            <Link to="/login">로그인</Link>
+                        )
+                    }
+                </header>
             )}
             <main>
                 <Outlet />
@@ -71,6 +76,7 @@ function App() {
                         <Route path="/detail/:diary_id" element={<Detail />} />
                         <Route path="/diary/upload" element={<DiaryUpload />} />
                         <Route path="/oauth" element={<OauthHandler />} />
+                        <Route path="/userregform" element={<UserRegForm />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
