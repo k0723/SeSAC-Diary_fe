@@ -10,6 +10,29 @@ const List = () => {
 
   const navigate = useNavigate();
 
+  const getPresignedUrl = async (key) => {
+  const token = window.sessionStorage.getItem("access_token");
+  const res = await axios.get(`http://localhost:8000/diarys/download-url?file_key=${encodeURIComponent(key)}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return res.data.download_url;
+  };
+
+  const [imageUrls, setImageUrls] = useState({});
+
+  useEffect(() => {
+    const fetchPresignedUrls = async () => {
+      const urls = {};
+      for (const diary of diarys) {
+        if (diary.image) {
+          urls[diary.id] = await getPresignedUrl(diary.image);
+        }
+      }
+      setImageUrls(urls);
+    };
+    if (diarys.length > 0) fetchPresignedUrls();
+  }, [diarys]);
+
   useEffect(() => {
     const token = window.sessionStorage.getItem("access_token");
     console.log(token);
@@ -44,7 +67,9 @@ const List = () => {
           {diarys.map((diary) => (
             <li key={diary.id} style={{ marginBottom: '20px' }}>
               <h3><Link to={`/detail/${diary.id}`}>{diary.title}</Link></h3>
-              {diary.image && <img src={`http://localhost:8000/diarys/download/${diary.id}`} alt={diary.title} style={{ width: '200px' }} />}
+              {diary.image && imageUrls[diary.id] && (
+                <img src={imageUrls[diary.id]} alt={diary.title} style={{ width: '200px' }} />
+              )}
               <p><strong>설명:</strong> {diary.description}</p>
               <p><strong>위치:</strong> {diary.location}</p>
               <p><strong>태그:</strong> {diary.tags}</p>
