@@ -65,7 +65,7 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/regist" element={<Regist />} />
                         <Route path="/list" element={<List />} />
-                        <Route path="/detail/:_id" element={<Detail />} />
+                        <Route path="/detail/:diary_id" element={<Detail />} />
                         <Route path="/diary/upload" element={<DiaryUpload />} />
                     </Route>
                 </Routes>
