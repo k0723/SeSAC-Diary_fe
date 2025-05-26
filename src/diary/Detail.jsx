@@ -5,22 +5,34 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const Detail = () => {
-  const { event_id } = useParams(); // URL 파라미터에서 event_id 추출
+  const { diary_id } = useParams(); // URL 파라미터 이름을 diary_id로 맞추세요
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     axios.get(`http://localhost:8000/diarys/${diary_id}`)
-      .then((response) => {
+      .then(async (response) => {
         setEvent(response.data);
         setLoading(false);
+
+        // presigned url로 이미지 가져오기
+        if (response.data.image) {
+          const token = window.sessionStorage.getItem("access_token");
+          const presignedRes = await axios.get(
+            `http://localhost:8000/diarys/download-url?file_key=${encodeURIComponent(response.data.image)}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          setImageUrl(presignedRes.data.download_url);
+        }
       })
       .catch((err) => {
         setError('일기 정보를 불러오는 데 실패했습니다.');
+        console.log(diary_id);
         setLoading(false);
       });
-  }, [event_id]);
+  }, [diary_id]);
 
   if (loading) return <p>로딩 중...</p>;
   if (error) return <p>{error}</p>;
@@ -29,10 +41,9 @@ const Detail = () => {
   return (
     <div>
       <h2>{event.title}</h2>
-      {event.image && <img src={event.image} alt={event.title} style={{ width: '300px' }} />}
-      <p><strong>설명:</strong> {event.description}</p>
-      <p><strong>위치:</strong> {event.location}</p>
-      <p><strong>태그:</strong> {event.tags}</p>
+      {imageUrl && <img src={imageUrl} alt={event.title} style={{ width: '300px' }} />}
+      <p><strong>내용:</strong> {event.content}</p>
+      <p><strong>상태:</strong> {event.state}</p>
       <p><strong>일기 ID:</strong> {event.id}</p>
     </div>
   );
