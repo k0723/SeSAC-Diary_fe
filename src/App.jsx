@@ -37,6 +37,7 @@ function Layout() {
         <>
             <h1>새싹 일기장</h1>
             <hr />
+            {location.pathname !== "/login" && (
             <header>
                 {
                     isLogin ? (
@@ -46,6 +47,7 @@ function Layout() {
                     )
                 }
             </header>
+            )}
             <main>
                 <Outlet />
             </main>
