@@ -5,6 +5,7 @@ import Detail from "./diary/Detail";
 import Login from "./user/Login";
 import { useEffect, useState } from "react";
 import DiaryUpload from "./diary/DiaryUpload"; 
+import OauthHandler from "./user/OauthHandler";
 
 function Layout() {
     const [isLogin, setIsLogin] = useState(false);
@@ -67,6 +68,7 @@ function App() {
                         <Route path="/list" element={<List />} />
                         <Route path="/detail/:diary_id" element={<Detail />} />
                         <Route path="/diary/upload" element={<DiaryUpload />} />
+                        <Route path="/oauth" element={<OauthHandler />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
