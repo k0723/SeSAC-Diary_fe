@@ -29,7 +29,7 @@ export default function Login() {
         .then(res => {
             if (res.status === 200) {
                 alert(res.data.message || "로그인 성공");
-                navigate("/list");
+                navigate("list");
             }
         })
         .catch(err => {

@@ -27,7 +27,6 @@ export default function Regist() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = window.sessionStorage.getItem("access_token");
 
     try {
       let image_url = "";
