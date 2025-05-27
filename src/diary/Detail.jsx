@@ -105,7 +105,9 @@ const Detail = () => {
           )}
         </div>
       )}
-
+      {diary.userName && (
+        <p className="detail-author"><strong>작성자:</strong> {diary.userName}</p>
+      )}
       <p><strong>내용:</strong> {diary.content}</p>
       <p><strong>공개여부:</strong> {diary.state ? "공개" : "비공개"}</p>
       <p><strong>감정:</strong> {emotionToEmoji(diary.emotion)}</p>

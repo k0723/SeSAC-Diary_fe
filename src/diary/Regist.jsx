@@ -27,7 +27,6 @@ export default function Regist() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = window.sessionStorage.getItem("access_token");
 
     try {
       let image_url = "";
@@ -35,7 +34,7 @@ export default function Regist() {
       if (image) {
         const ext = image.name.split('.').pop().toLowerCase();
         const presignedRes = await axios.get(`http://localhost:8000/diarys/presigned-url?file_type=${ext}`, {
-          headers: { Authorization: `Bearer ${token}` }
+          withCredentials: true
         });
         const { url, key } = presignedRes.data;
 
@@ -50,9 +49,8 @@ export default function Regist() {
         image: image_url,
       }, {
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },withCredentials: true
       });
 
       if (res.status === 201) {

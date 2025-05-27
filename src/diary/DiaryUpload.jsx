@@ -19,10 +19,13 @@ export default function DiaryUpload() {
     e.preventDefault();
     if (!file) return alert("이미지를 선택해주세요.");
 
-    const token = window.sessionStorage.getItem("access_token");
 
     try {
-      const presignedRes = await axios.get("http://localhost:8000/s3/presigned-url");
+      const fileType = file?.type?.split('/')[1];
+      const presignedRes = await axios.get("http://localhost:8000/diarys/presigned-url", {
+  params: { file_type: fileType },
+  withCredentials: true,
+});
       const { url, key } = presignedRes.data;
 
       await axios.put(url, file, {
@@ -38,10 +41,10 @@ export default function DiaryUpload() {
         { title, content, image_url: imageUrl },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+          withCredentials: true,
+        },
       );
 
       alert("일기 등록 완료!");
