@@ -112,8 +112,8 @@ const List = () => {
                                     <h3 className="diary-title">{diary.title}</h3> {/* App.css의 .diary-title 스타일 적용 */}
 
                                     {/* 작성자 정보 표시 */}
-                                    {diary.userName && (
-                                        <p className="diary-author">작성자: {diary.userName}</p>
+                                    {diary.username && (
+                                        <p className="diary-author">작성자: {diary.username}</p>
                                     )}
 
                                     <p className="diary-excerpt"> {/* App.css의 .diary-excerpt 스타일 적용 */}
