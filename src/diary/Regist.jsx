@@ -2,10 +2,11 @@ import "../App.css";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+const s3client = axios.create();
+delete s3client.defaults.headers.common["Authorization"];
 
 export default function Regist() {
   const navigate = useNavigate();
-
   const [form, setForm] = useState({
     title: "",
     content: "",
@@ -26,10 +27,9 @@ export default function Regist() {
   };
 
   const handleStateChange = (e) => {
-    // select 박스의 value는 항상 문자열이므로, 불리언으로 변환해야 합니다.
     setForm({
       ...form,
-      state: e.target.value === "public" ? true : false,
+      state: e.target.value === "public",
     });
   };
 
@@ -42,26 +42,36 @@ export default function Regist() {
 
       if (image) {
         const ext = image.name.split('.').pop().toLowerCase();
-        const presignedRes = await axios.get(`http://localhost:8000/diarys/presigned-url?file_type=${ext}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const presignedRes = await axios.get(
+          `http://localhost:8000/diarys/presigned-url?file_type=${ext}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         const { url, key } = presignedRes.data;
 
-        await axios.put(url, image); // S3로 업로드
+        // S3로 업로드: 반드시 Content-Type 헤더 포함
+        await s3client.put(url, image, {
+          headers: {
+            "Content-Type": image.type
+          }
+        });
         image_url = key;
       }
 
-      const res = await axios.post("http://localhost:8000/diarys/", {
-        title: form.title,
-        content: form.content,
-        state: form.state,
-        image: image_url,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+      const res = await axios.post(
+        "http://localhost:8000/diarys/",
+        {
+          title: form.title,
+          content: form.content,
+          state: form.state,
+          image: image_url,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
         }
-      });
+      );
 
       if (res.status === 201) {
         alert("일기 등록 완료!");
