@@ -27,12 +27,11 @@ function Layout() {
     const navigate = useNavigate();
     
     useEffect(() => {
-        const token = window.sessionStorage.getItem("access_token");
-        if (token) {
-            setIsLogin(true);
-        } else {
-            setIsLogin(false);
-        }
+        axios.get("http://localhost:8000/users/me", {
+            withCredentials: true  // ✅ 쿠키 포함
+        })
+        .then(() => setIsLogin(true))
+        .catch(() => setIsLogin(false));
     });
 
     useEffect(() => {
@@ -45,7 +44,7 @@ function Layout() {
             navigate("/login");
         }
 
-    }, [isLogin, navigate]);*/
+    }, [isLogin, navigate]);
 
     return (
         <>
@@ -84,7 +83,7 @@ function App() {
                         <Route path="/list" element={<List />} />
                         <Route path="/detail/:diary_id" element={<Detail />} />
                         <Route path="/diary/upload" element={<DiaryUpload />} />
-                        <Route path="/oauth" element={<OauthHandler />} />
+                        <Route path="/oauth" element={<OauthHandler setIsLogin={setIsLogin} />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
