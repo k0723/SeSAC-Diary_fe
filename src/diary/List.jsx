@@ -2,42 +2,42 @@ import "../App.css";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import CalendarComponent from '../calendar'; 
+import CalendarComponent from '../calendar';
 
 const List = () => {
-  const [diarys, setDiarys] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [imageUrls, setImageUrls] = useState({});
-  const [filteredDiarys, setFilteredDiarys] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
-  const navigate = useNavigate();
-
-  // Presigned URL 받아오기
-  const getPresignedUrl = async (key) => {
-    const token = window.sessionStorage.getItem("access_token");
-    const res = await axios.get(
-      `http://localhost:8000/diarys/download-url?file_key=${encodeURIComponent(key)}`,
-      { headers: { Authorization: `Bearer ${token}` } }
+    const [diarys, setDiarys] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [imageUrls, setImageUrls] = useState({});
+    const [filteredDiarys, setFilteredDiarys] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(
+        new Date().toISOString().slice(0, 10)
     );
-    return res.data.download_url;
-  };
+    const navigate = useNavigate();
 
-  // 이미지 URL 가져오기
-  useEffect(() => {
-    const fetchPresignedUrls = async () => {
-      const urls = {};
-      for (const diary of diarys) {
-        if (diary.image) {
-          urls[diary.id] = await getPresignedUrl(diary.image);
-        }
-      }
-      setImageUrls(urls);
+    // Presigned URL 받아오기
+    const getPresignedUrl = async (key) => {
+        const token = window.sessionStorage.getItem("access_token");
+        const res = await axios.get(
+            `http://localhost:8000/diarys/download-url?file_key=${encodeURIComponent(key)}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return res.data.download_url;
     };
-    if (diarys.length > 0) fetchPresignedUrls();
-  }, [diarys]);
+
+    // 이미지 URL 가져오기
+    useEffect(() => {
+        const fetchPresignedUrls = async () => {
+            const urls = {};
+            for (const diary of diarys) {
+                if (diary.image) {
+                    urls[diary.id] = await getPresignedUrl(diary.image);
+                }
+            }
+            setImageUrls(urls);
+        };
+        if (diarys.length > 0) fetchPresignedUrls();
+    }, [diarys]);
 
   // 로그인 체크
   useEffect(() => {
@@ -73,32 +73,32 @@ const List = () => {
         });
     }, []);
 
-  // 선택된 날짜와 일기 작성일이 같으면 필터링
-  useEffect(() => {
-    if (selectedDate) {
-    
-      const filtered = diarys.filter(
-        (diary) =>
-          new Date(diary.created_at).toISOString().slice(0, 10) === selectedDate
-      );
-      setFilteredDiarys(filtered);
-    } else {
-      setFilteredDiarys(diarys);
-    }
-  }, [selectedDate, diarys]);
+    // 선택된 날짜와 일기 작성일이 같으면 필터링
+    useEffect(() => {
+        if (selectedDate) {
 
-  if (loading) return <p>로딩 중...</p>;
-  if (error) return <p>{error}</p>;
+            const filtered = diarys.filter(
+                (diary) =>
+                    new Date(diary.created_at).toISOString().slice(0, 10) === selectedDate
+            );
+            setFilteredDiarys(filtered);
+        } else {
+            setFilteredDiarys(diarys);
+        }
+    }, [selectedDate, diarys]);
 
-  return (
-    <div style={{ padding: '20px' }}>
+    if (loading) return <p>로딩 중...</p>;
+    if (error) return <p>{error}</p>;
 
-      <CalendarComponent
-        onDateSelect={setSelectedDate}
-        attendDates={Array.from(
-          new Set(diarys.map(d => new Date(d.created_at).toISOString().slice(0, 10)))
-        )}
-      />
+    return (
+        <div style={{ padding: '20px' }}>
+
+            <CalendarComponent
+                onDateSelect={setSelectedDate}
+                attendDates={Array.from(
+                    new Set(diarys.map(d => new Date(d.created_at).toISOString().slice(0, 10)))
+                )}
+            />
 
 
       <h2>
