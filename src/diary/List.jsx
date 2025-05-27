@@ -2,13 +2,18 @@ import "../App.css";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import CalendarComponent from '../calendar';
 
 const List = () => {
-  const [diarys, setDiarys] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [imageUrls, setImageUrls] = useState({});
-  const navigate = useNavigate();
+    const [diarys, setDiarys] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [imageUrls, setImageUrls] = useState({});
+    const [filteredDiarys, setFilteredDiarys] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(
+        new Date().toISOString().slice(0, 10)
+    );
+    const navigate = useNavigate();
 
   // Presigned URL 받아오기
   const getPresignedUrl = async (key) => {
@@ -19,19 +24,19 @@ const List = () => {
     return res.data.download_url;
   };
 
-  // 이미지 URL 가져오기
-  useEffect(() => {
-    const fetchPresignedUrls = async () => {
-      const urls = {};
-      for (const diary of diarys) {
-        if (diary.image) {
-          urls[diary.id] = await getPresignedUrl(diary.image);
-        }
-      }
-      setImageUrls(urls);
-    };
-    if (diarys.length > 0) fetchPresignedUrls();
-  }, [diarys]);
+    // 이미지 URL 가져오기
+    useEffect(() => {
+        const fetchPresignedUrls = async () => {
+            const urls = {};
+            for (const diary of diarys) {
+                if (diary.image) {
+                    urls[diary.id] = await getPresignedUrl(diary.image);
+                }
+            }
+            setImageUrls(urls);
+        };
+        if (diarys.length > 0) fetchPresignedUrls();
+    }, [diarys]);
 
   // 로그인 체크
   useEffect(() => {
@@ -41,7 +46,7 @@ const List = () => {
       navigate("/login");
     });
   }, []);
-
+  
   // 일기 목록 가져오기
   useEffect(() => {
         axios.get('http://localhost:8000/diarys/', {withCredentials: true})
@@ -59,71 +64,93 @@ const List = () => {
         });
     }, []);
 
-  if (loading) return <p>로딩 중...</p>;
-  if (error) return <p>{error}</p>;
+    // 선택된 날짜와 일기 작성일이 같으면 필터링
+    useEffect(() => {
+        if (selectedDate) {
 
-  return (
-        <div className="container"> {/* App.css의 .container 스타일 적용 */}
-            <h2 className="page-title">🌱 나의 새싹 일기</h2> {/* App.css의 .page-title 스타일 적용 */}
+            const filtered = diarys.filter(
+                (diary) =>
+                    new Date(diary.created_at).toISOString().slice(0, 10) === selectedDate
+            );
+            setFilteredDiarys(filtered);
+        } else {
+            setFilteredDiarys(diarys);
+        }
+    }, [selectedDate, diarys]);
 
-            {diarys.length === 0 ? (
-                <p className="no-diary-message">아직 작성된 일기가 없습니다. 첫 일기를 작성해보세요!</p>
-            ) : (
-                <ul className="diary-list"> {/* App.css의 .diary-list 스타일 적용 */}
-                    {diarys.map((diary) => (
-                        <li key={diary.id} className="diary-card"> {/* App.css의 .diary-card 스타일 적용 */}
-                            <Link
-                                to={`/detail/${diary.id}`}
-                                className="diary-link" /* Link 태그 자체에 스타일 적용을 위해 클래스 추가 */
-                            >
-                                <div className="diary-image-container"> {/* App.css의 .diary-image-container 스타일 적용 */}
-                                    {diary.image && imageUrls[diary.id] ? (
-                                        <img
-                                            src={imageUrls[diary.id]}
-                                            alt={diary.title}
-                                            className="diary-card-image" /* App.css의 .diary-card-image 스타일 적용 */
-                                        />
-                                    ) : (
-                                        // 이미지가 없거나 로딩 중일 때 플레이스홀더 표시
-                                        <div className="diary-card-image-placeholder"></div> /* App.css의 .diary-card-image-placeholder 스타일 적용 */
-                                    )}
-                                </div>
-                                <div className="diary-content"> {/* App.css의 .diary-content 스타일 적용 */}
-                                    {/* 작성일자 표시 */}
-                                    {diary.created_at && (
-                                        <p className="diary-date"> {/* App.css의 .diary-date 스타일 적용 */}
-                                            {new Date(diary.created_at).toLocaleDateString('ko-KR', {
-                                                year: 'numeric',
-                                                month: '2-digit',
-                                                day: '2-digit'
-                                            }).replace(/\. /g, '/').slice(0, -1)}
-                                        </p>
-                                    )}
+    if (loading) return <p>로딩 중...</p>;
+    if (error) return <p>{error}</p>;
 
-                                    <h3 className="diary-title">{diary.title}</h3> {/* App.css의 .diary-title 스타일 적용 */}
+    return (
+        <div style={{ padding: '20px' }}>
 
-                                    {/* 작성자 정보 표시 */}
-                                    {diary.userName && (
-                                        <p className="diary-author">작성자: {diary.userName}</p>
-                                    )}
+            <CalendarComponent
+                onDateSelect={setSelectedDate}
+                attendDates={Array.from(
+                    new Set(diarys.map(d => new Date(d.created_at).toISOString().slice(0, 10)))
+                )}
+            />
 
-                                    <p className="diary-excerpt"> {/* App.css의 .diary-excerpt 스타일 적용 */}
-                                        {diary.content.length > 50
-                                            ? diary.content.slice(0, 50) + "..."
-                                            : diary.content}
-                                    </p>
-                                </div>
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            )}
 
-            <button className="write-button" onClick={() => navigate("/regist")}> {/* App.css의 .write-button 스타일 적용 */}
+      <h2>
+        {new Date(selectedDate).toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          weekday: 'long'
+        })}의 일기
+      </h2>
+      
+      {filteredDiarys.length === 0 ? (
+      <p>오늘은 일기가 없습니다.</p>
+      ) : (
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {filteredDiarys.map((diary) => (
+            <li
+              key={diary.id}
+              style={{
+                marginBottom: '20px',
+                borderBottom: '1px solid #ccc',
+                paddingBottom: '20px',
+              }}
+            >
+              <Link
+                to={`/detail/${diary.id}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
+                  {diary.image && imageUrls[diary.id] && (
+                    <img
+                      src={imageUrls[diary.id]}
+                      alt={diary.title}
+                      style={{
+                        width: '200px',
+                        height: 'auto',
+                        objectFit: 'cover',
+                        borderRadius: '8px',
+                      }}
+                    />
+                  )}
+                  <div>
+                    <h3>{diary.title}</h3>
+                    <p style={{ maxWidth: "500px", color: "#555" }}>
+                      {diary.content.length > 100
+                        ? diary.content.slice(0, 100) + "..."
+                        : diary.content}
+                    </p>
+                    
+                  </div>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+      <button className="write-button" onClick={() => navigate("/regist")}> {/* App.css의 .write-button 스타일 적용 */}
                 <span className="icon">✏️</span> 글쓰기
             </button>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default List;

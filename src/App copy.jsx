@@ -7,10 +7,6 @@ import { useEffect, useState, useRef } from "react";
 import DiaryUpload from "./diary/DiaryUpload";
 import OauthHandler from "./user/OauthHandler";
 import UserRegForm from "./user/UserRegForm.jsx";
-import ModifyDetail from "./diary/ModifyDetail.jsx";
-
-import CalendarComponent from "./calendar";                         //캘린더
-import axios from "axios";
 
 function Layout() {
     const [isLogin, setIsLogin] = useState(false);
@@ -18,28 +14,33 @@ function Layout() {
     const location = useLocation();
     const alertShownRef = useRef(false); // alert이 방금 출력되었는지 추적하는 useRef
 
-    const handleLogout = async () => {
-  try {
-    await axios.post("http://localhost:8000/users/logout", {}, {
-      withCredentials: true  // ✅ 쿠키 포함 필수
-    });
-    setIsLogin(false);  // ✅ 상태 초기화
-    window.location.href = "/login";  // ✅ 또는 navigate("/login")
-  } catch (err) {
-    console.error("로그아웃 실패", err);
-  }
-};
+    const handleLogout = () => {
+        window.sessionStorage.removeItem("access_token");
+        setIsLogin(false);
+        alertShownRef.current = false; // 로그아웃 시 alert 상태 초기화
+        navigate("/login");
+    };
 
-    const navigate = useNavigate();
-    
+    // isLogin 상태를 관리하는 useEffect (path 변경 시 토큰 재확인)
     useEffect(() => {
-        axios.get("http://localhost:8000/users/me", {
-            withCredentials: true  // ✅ 쿠키 포함
-        })
-        .then(() => setIsLogin(true))
-        .catch(() => setIsLogin(false));
-    });
+        const token = window.sessionStorage.getItem("access_token");
+        setIsLogin(!!token); // 토큰이 있으면 true, 없으면 false
+    }, [location.pathname]);
 
+    /*
+        useEffect(() => {
+            if(isLogin && location.pathname === "/userregform") {
+                navigate("/list");
+            } else if (isLogin) {
+                navigate("/list");
+            } else if (location.pathname !== "/userregform") {
+    
+                navigate("/login");
+            }
+    
+        }, [isLogin, navigate]);*/
+
+    // 로그인 여부에 따른 리다이렉트 로직
     useEffect(() => {
         const token = window.sessionStorage.getItem("access_token");
         const currentPath = location.pathname;
@@ -71,22 +72,23 @@ function Layout() {
                 navigate("/login");
             }
         }
-
-    }, [isLogin, navigate]);
+    }, [isLogin, navigate, location.pathname]); // isLogin, navigate, location.pathname이 변경될 때마다 실행
 
     return (
         <>
             <h1>새싹 일기장</h1>
             <hr />
-            <header>
-                {
-                    isLogin ? (
-                        <a onClick={handleLogout}>로그아웃</a>
-                    ) : (
-                        <Link to="/login">로그인</Link>
-                    )
-                }
-            </header>
+            {location.pathname !== "/login" && location.pathname !== "/userregform" && location.pathname !== "/oauth" && (
+                <header>
+                    {
+                        isLogin ? (
+                            <a onClick={handleLogout} style={{ cursor: 'pointer' }}>로그아웃</a>
+                        ) : (
+                            <Link to="/login">로그인</Link>
+                        )
+                    }
+                </header>
+            )}
             <main>
                 <Outlet />
             </main>
@@ -98,23 +100,19 @@ function Layout() {
 }
 
 function App() {
-    const [isLogin, setIsLogin] = useState(false);
     return (
         <>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Layout isLogin={isLogin} setIsLogin={setIsLogin} />}>
+                    <Route path="/" element={<Layout />}>
+                        <Route index element={<List />} />
                         <Route path="/login" element={<Login />} />
-                        <Route path="/userregform" element={<UserRegForm />} />
                         <Route path="/regist" element={<Regist />} />
                         <Route path="/list" element={<List />} />
                         <Route path="/detail/:diary_id" element={<Detail />} />
                         <Route path="/diary/upload" element={<DiaryUpload />} />
                         <Route path="/oauth" element={<OauthHandler />} />
                         <Route path="/userregform" element={<UserRegForm />} />
-                        <Route path="/modifydetail/:diary_id" element={<ModifyDetail />} />
-                        <Route path="/calendar" element={<CalendarComponent />} />
-                        <Route path="/oauth" element={<OauthHandler setIsLogin={setIsLogin} />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

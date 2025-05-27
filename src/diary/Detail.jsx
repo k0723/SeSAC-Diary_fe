@@ -105,8 +105,8 @@ const Detail = () => {
           )}
         </div>
       )}
-      {diary.userName && (
-        <p className="detail-author"><strong>작성자:</strong> {diary.userName}</p>
+      {diary.username && (
+        <p className="detail-author"><strong>작성자:</strong> {diary.username}</p>
       )}
       <p><strong>내용:</strong> {diary.content}</p>
       <p><strong>공개여부:</strong> {diary.state ? "공개" : "비공개"}</p>
@@ -114,6 +114,9 @@ const Detail = () => {
 
       <button onClick={() => navigate('/list')} style={{ marginTop: '20px' }}>
         목록으로
+      </button>
+      <button onClick={() => navigate(`/modifydetail/${diary_id}`)} >
+        수정
       </button>
     </div>
   );
