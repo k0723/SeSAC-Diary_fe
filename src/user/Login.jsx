@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -24,7 +24,7 @@ export default function Login() {
                     // 메시지를 출력 -> 토큰을 저장 -> 일기장 목록으로 이동
                     alert(res.data.message);
                     window.sessionStorage.setItem("access_token", res.data.access_token);
-                    navigate("/list");
+                    navigate("/list");  // 로그인 성공 시 일기장 목록으로 이동
                 }
             })
             .catch(err => {
@@ -57,6 +57,11 @@ export default function Login() {
             <button onClick={handleGoogleLogin} style={{ background: "#4285F4", color: "#fff", padding: "8px 16px", border: "none", borderRadius: "4px", marginTop: "10px" }}>
                 Google 계정으로 로그인
             </button>
+            <hr />
+            <p style={{ marginTop: "20px" }}>
+                아직 계정이 없으신가요?
+                <Link to="/userregform" style={{ marginLeft: "10px", color: "#007bff", textDecoration: "none" }}>회원가입</Link>
+            </p>
         </>
     );
 }
