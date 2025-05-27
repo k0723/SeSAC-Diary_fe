@@ -1,0 +1,129 @@
+/* 전체 폰트 및 배경 설정 */
+body {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 10px 30px;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* 제목 스타일 */
+h1 {
+    color: #222;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+/* 수정 폼 스타일 */
+.modify-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 수정 입력창 스타일 */
+.modify-form input[type="text"],
+.modify-form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* 수정 텍스트 영역 스타일 */
+.modify-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* 파일 선택 스타일 */
+.modify-form input[type="file"] {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+/* 버튼 스타일 */
+.modify-form button {
+    padding: 10px;
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.modify-form button:hover {
+    background-color: #45a049;
+}
+
+/* 공개여부 선택 스타일 */
+.modify-form select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+/* 텍스트 필드 placeholder 스타일 */
+.modify-form input::placeholder,
+.modify-form textarea::placeholder {
+    color: #888;
+}
+
+/* 에러 및 로딩 상태 텍스트 */
+.modify-form p {
+    font-size: 16px;
+    color: #888;
+    text-align: center;
+}
+
+.modify-form .error {
+    color: red;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* 목록으로 버튼 스타일 */
+.modify-form .back-button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.modify-form .back-button:hover {
+    background-color: #45a049;
+}
+
+/* 모바일 대응 */
+@media (max-width: 600px) {
+    .modify-form {
+        width: 90%;
+    }
+
+    .modify-form button {
+        font-size: 14px;
+    }
+}

@@ -68,15 +68,17 @@ const UserRegForm = () => {
 
         // 이메일, 닉네임 중복이 없으면 회원가입 진행
         try {
+            console.log("일로 들어옴. ")
             const response = await axios.post('http://localhost:8000/users/signup', {
-                email,
+                email : email,
                 userName: userName,
-                password
+                password : password,
+                role : 'user'
             });
-            // 성공하면 로그인 페이지로 리다이렉트 또는 다른 처리
             alert('회원가입이 완료되었습니다!');
             navigate("/login");
         } catch (err) {
+            console.error("회원가입 오류:", err)
             alert("회원가입 중 오류가 발생했습니다.");
         }
     };
