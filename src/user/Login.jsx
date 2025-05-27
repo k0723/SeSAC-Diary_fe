@@ -13,11 +13,16 @@ export default function Login() {
     const changePassword = e => setPassword(e.target.value);
     const handleSubmit = e => {
         e.preventDefault();
-
+        const formData = new URLSearchParams();
+        formData.append("username", username);
+        formData.append("password", password);
         axios
             .post("http://localhost:8000/users/signin/", 
-                { username, password },
-                { headers: { "Content-Type": "application/x-www-form-urlencoded" } })
+                formData,
+                { 
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    withCredentials: true
+                })
             .then(res => {
                 console.log(res);
                 if (res.status === 200) {

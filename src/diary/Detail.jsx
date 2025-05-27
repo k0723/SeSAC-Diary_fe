@@ -31,17 +31,16 @@ const Detail = () => {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/diarys/${diary_id}`)
+    axios.get(`http://localhost:8000/diarys/${diary_id}`, { withCredentials: true })
       .then(async (response) => {
         setDiary(response.data);
         setLoading(false);
 
         // 이미지가 있을 경우 presigned URL 요청
         if (response.data.image) {
-          const token = window.sessionStorage.getItem("access_token");
           const presignedRes = await axios.get(
-            `http://localhost:8000/diarys/download-url?file_key=${encodeURIComponent(response.data.image)}`,
-            { headers: { Authorization: `Bearer ${token}` } }
+            `http://localhost:8000/diarys/download-url?file_key=${encodeURIComponent(response.data.image)}`
+            , { withCredentials: true }
           );
           setImageUrl(presignedRes.data.download_url);
         }
