@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import DiaryUpload from "./diary/DiaryUpload";
 import OauthHandler from "./user/OauthHandler";
 import UserRegForm from "./user/UserRegForm.jsx";
+import ModifyDetail from "./diary/ModifyDetail.jsx";
 
 function Layout() {
     const [isLogin, setIsLogin] = useState(false);
@@ -77,6 +78,7 @@ function App() {
                         <Route path="/diary/upload" element={<DiaryUpload />} />
                         <Route path="/oauth" element={<OauthHandler />} />
                         <Route path="/userregform" element={<UserRegForm />} />
+                        <Route path="/modifydetail/:diary_id" element={<ModifyDetail />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
