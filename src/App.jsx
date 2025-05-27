@@ -8,6 +8,8 @@ import DiaryUpload from "./diary/DiaryUpload";
 import OauthHandler from "./user/OauthHandler";
 import UserRegForm from "./user/UserRegForm.jsx";
 
+import CalendarComponent from "./calendar";                         //캘린더
+
 function Layout() {
     const [isLogin, setIsLogin] = useState(false);
     const navigate = useNavigate();
@@ -21,24 +23,20 @@ function Layout() {
         navigate("/login");
     };
 
+
     // isLogin 상태를 관리하는 useEffect (path 변경 시 토큰 재확인)
     useEffect(() => {
         const token = window.sessionStorage.getItem("access_token");
         setIsLogin(!!token); // 토큰이 있으면 true, 없으면 false
     }, [location.pathname]);
 
-    /*
-        useEffect(() => {
-            if(isLogin && location.pathname === "/userregform") {
-                navigate("/list");
-            } else if (isLogin) {
-                navigate("/list");
-            } else if (location.pathname !== "/userregform") {
-    
-                navigate("/login");
-            }
-    
-        }, [isLogin, navigate]);*/
+    // useEffect(() => {
+    //     if (isLogin) {
+    //         navigate("/list");
+    //     } else {
+    //         navigate("/login");
+    //     }
+    // }, [isLogin]);
 
     // 로그인 여부에 따른 리다이렉트 로직
     useEffect(() => {
@@ -78,17 +76,15 @@ function Layout() {
         <>
             <h1>새싹 일기장</h1>
             <hr />
-            {location.pathname !== "/login" && location.pathname !== "/userregform" && location.pathname !== "/oauth" && (
-                <header>
-                    {
-                        isLogin ? (
-                            <a onClick={handleLogout} style={{ cursor: 'pointer' }}>로그아웃</a>
-                        ) : (
-                            <Link to="/login">로그인</Link>
-                        )
-                    }
-                </header>
-            )}
+            <header>
+                {
+                    isLogin ? (
+                        <a onClick={handleLogout}>로그아웃</a>
+                    ) : (
+                        <Link to="/login">로그인</Link>
+                    )
+                }
+            </header>
             <main>
                 <Outlet />
             </main>
@@ -107,12 +103,13 @@ function App() {
                     <Route path="/" element={<Layout />}>
                         <Route index element={<List />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/userregform" element={<UserRegForm />} />
                         <Route path="/regist" element={<Regist />} />
                         <Route path="/list" element={<List />} />
                         <Route path="/detail/:diary_id" element={<Detail />} />
                         <Route path="/diary/upload" element={<DiaryUpload />} />
                         <Route path="/oauth" element={<OauthHandler />} />
-                        <Route path="/userregform" element={<UserRegForm />} />
+                        <Route path="/calendar" element={<CalendarComponent />} />            {/*캘린더*/}
                     </Route>
                 </Routes>
             </BrowserRouter>
