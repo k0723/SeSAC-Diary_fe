@@ -7,6 +7,7 @@ import { useEffect, useState, useRef } from "react";
 import DiaryUpload from "./diary/DiaryUpload";
 import OauthHandler from "./user/OauthHandler";
 import UserRegForm from "./user/UserRegForm.jsx";
+import ModifyDetail from "./diary/ModifyDetail.jsx";
 
 import CalendarComponent from "./calendar";                         //캘린더
 
@@ -109,7 +110,9 @@ function App() {
                         <Route path="/detail/:diary_id" element={<Detail />} />
                         <Route path="/diary/upload" element={<DiaryUpload />} />
                         <Route path="/oauth" element={<OauthHandler />} />
-                        <Route path="/calendar" element={<CalendarComponent />} />            {/*캘린더*/}
+                        <Route path="/userregform" element={<UserRegForm />} />
+                        <Route path="/modifydetail/:diary_id" element={<ModifyDetail />} />
+                        <Route path="/calendar" element={<CalendarComponent />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

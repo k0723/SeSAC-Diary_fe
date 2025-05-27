@@ -116,6 +116,9 @@ const Detail = () => {
       <button onClick={() => navigate('/list')} style={{ marginTop: '20px' }}>
         목록으로
       </button>
+      <button onClick={() => navigate(`/modifydetail/${diary_id}`)} >
+        수정
+      </button>
     </div>
   );
 };
