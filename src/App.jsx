@@ -4,8 +4,9 @@ import Regist from "./diary/Regist";
 import Detail from "./diary/Detail";
 import Login from "./user/Login";
 import { useEffect, useState } from "react";
-import DiaryUpload from "./diary/DiaryUpload"; 
+import DiaryUpload from "./diary/DiaryUpload";
 import OauthHandler from "./user/OauthHandler";
+import UserRegForm from "./user/UserRegForm.jsx";
 import axios from "axios";
 
 function Layout() {
@@ -25,39 +26,41 @@ function Layout() {
 
     const navigate = useNavigate();
     
-  useEffect(() => {
-    axios.get("http://localhost:8000/users/me", {
-        withCredentials: true  // ✅ 쿠키를 포함해서 요청
-    })
-    .then(() => {
-        setIsLogin(true);   // ✅ 로그인 상태로 전환
-    })
-    .catch(() => {
-        setIsLogin(false);  // ✅ 인증 실패 → 로그아웃 상태
+    useEffect(() => {
+        axios.get("http://localhost:8000/users/me", {
+            withCredentials: true  // ✅ 쿠키 포함
+        })
+        .then(() => setIsLogin(true))
+        .catch(() => setIsLogin(false));
     });
-}, []);
 
     useEffect(() => {
-        if(isLogin) {
+        if(isLogin && location.pathname === "/userregform") {
             navigate("/list");
-        } else {
+        } else if (isLogin) {
+            navigate("/list");
+        } else if (location.pathname !== "/userregform") {
+
             navigate("/login");
         }
-    }, [isLogin]);
+
+    }, [isLogin, navigate]);
 
     return (
         <>
             <h1>새싹 일기장</h1>
             <hr />
-            <header>
-                {
-                    isLogin ? (
-                        <a onClick={handleLogout}>로그아웃</a>
-                    ) : (
-                        <Link to="/login">로그인</Link>
-                    )
-                }
-            </header>
+            {location.pathname !== "/login" &&  (
+                <header>
+                    {
+                        isLogin ? (
+                            <a onClick={handleLogout}>로그아웃</a>
+                        ) : (
+                            <Link to="/login">로그인</Link>
+                        )
+                    }
+                </header>
+            )}
             <main>
                 <Outlet />
             </main>
