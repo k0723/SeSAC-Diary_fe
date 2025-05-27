@@ -75,7 +75,7 @@ const Detail = () => {
         }
       } catch (err) {
         console.error("일기 정보 불러오기 실패:", err.response ? err.response.data : err.message);
-        
+
         let errorMessage = "일기 정보를 불러오는 데 실패했습니다.";
         if (err.response) {
           if (err.response.status === 401) {
@@ -86,7 +86,7 @@ const Detail = () => {
             errorMessage = err.response.data.detail;
           }
         }
-        
+
         // alert 띄우고 확인 누르면 목록으로 이동
         alert(errorMessage);
         navigate("/list"); // 항상 목록으로 이동
@@ -115,6 +115,10 @@ const Detail = () => {
   if (loading) return <p>로딩 중...</p>;
   if (error) return <p>{error}</p>;
   if (!diary) return <p>일기 정보가 없습니다.</p>;
+
+  const storedUserId = window.sessionStorage.getItem("user_id");
+  const loggedInUserId = storedUserId ? parseInt(storedUserId) : null;
+  const isCurrentUserOwner = (loggedInUserId !== null && !isNaN(loggedInUserId) && loggedInUserId === diary.user_id);
 
   return (
     <div ref={containerRef}>
@@ -164,9 +168,23 @@ const Detail = () => {
       <button onClick={() => navigate('/list')} style={{ marginTop: '20px' }}>
         목록으로
       </button>
-      <button onClick={() => navigate(`/modifydetail/${diary_id}`)} >
-        수정
-      </button>
+      {/* --- isCurrentUserOwner가 true일 때만 수정 버튼을 렌더링 --- */}
+      {isCurrentUserOwner && (
+        <button
+          onClick={() => navigate(`/modifydetail/${diary_id}`)}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: '1em'
+          }}
+        >
+          수정
+        </button>
+      )}
     </div>
   );
 };
