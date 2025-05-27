@@ -50,16 +50,28 @@ const List = () => {
   
   // 일기 목록 가져오기
   useEffect(() => {
-    axios.get('http://localhost:8000/diarys/')
-      .then((response) => {
-        setDiarys(response.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError('일기장 데이터를 불러오는 데 실패했습니다.');
-        setLoading(false);
-      });
-  }, []);
+        const token = window.sessionStorage.getItem("access_token");
+        if (!token) {
+            setLoading(false);
+            return;
+        }
+
+        axios.get('http://localhost:8000/diarys/', {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        .then((response) => {
+            // 날짜 내림차순으로 정렬 (최신 일기가 위에 오도록)
+            // `created_at`이 문자열로 올 수 있으므로 `new Date()`로 변환하여 비교
+            const sortedDiarys = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            setDiarys(sortedDiarys);
+            setLoading(false);
+        })
+        .catch((err) => {
+            console.error("일기장 데이터를 불러오는 데 실패했습니다:", err.response ? err.response.data : err.message);
+            setError('일기장 데이터를 불러오는 데 실패했습니다.');
+            setLoading(false);
+        });
+    }, []);
 
   // 선택된 날짜와 일기 작성일이 같으면 필터링
   useEffect(() => {
@@ -143,7 +155,9 @@ const List = () => {
           ))}
         </ul>
       )}
-      <button onClick={() => navigate("/regist")}>일기 등록</button>
+      <button className="write-button" onClick={() => navigate("/regist")}> {/* App.css의 .write-button 스타일 적용 */}
+                <span className="icon">✏️</span> 글쓰기
+            </button>
     </div>
   );
 };
