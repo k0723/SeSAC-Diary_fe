@@ -12,10 +12,9 @@ const List = () => {
 
   // Presigned URL 받아오기
   const getPresignedUrl = async (key) => {
-    const token = window.sessionStorage.getItem("access_token");
     const res = await axios.get(
       `http://localhost:8000/diarys/download-url?file_key=${encodeURIComponent(key)}`,
-      { headers: { Authorization: `Bearer ${token}` } }
+      { withCredentials: true }
     );
     return res.data.download_url;
   };
@@ -36,24 +35,16 @@ const List = () => {
 
   // 로그인 체크
   useEffect(() => {
-    const token = window.sessionStorage.getItem("access_token");
-    if (!token) {
+    axios.get('http://localhost:8000/users/me', { withCredentials: true })
+    .catch(() => {
       alert("로그인 후 사용하세요.");
       navigate("/login");
-    }
+    });
   }, []);
 
   // 일기 목록 가져오기
   useEffect(() => {
-        const token = window.sessionStorage.getItem("access_token");
-        if (!token) {
-            setLoading(false);
-            return;
-        }
-
-        axios.get('http://localhost:8000/diarys/', {
-            headers: { Authorization: `Bearer ${token}` }
-        })
+        axios.get('http://localhost:8000/diarys/', {withCredentials: true})
         .then((response) => {
             // 날짜 내림차순으로 정렬 (최신 일기가 위에 오도록)
             // `created_at`이 문자열로 올 수 있으므로 `new Date()`로 변환하여 비교

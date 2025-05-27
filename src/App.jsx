@@ -7,17 +7,25 @@ import { useEffect, useState } from "react";
 import DiaryUpload from "./diary/DiaryUpload";
 import OauthHandler from "./user/OauthHandler";
 import UserRegForm from "./user/UserRegForm.jsx";
+import axios from "axios";
 
 function Layout() {
     const [isLogin, setIsLogin] = useState(false);
 
-    const handleLogout = () => {
-        window.sessionStorage.removeItem("access_token");
-        setIsLogin(false);
-    };
+    const handleLogout = async () => {
+  try {
+    await axios.post("http://localhost:8000/users/logout", {}, {
+      withCredentials: true  // ✅ 쿠키 포함 필수
+    });
+    setIsLogin(false);  // ✅ 상태 초기화
+    window.location.href = "/login";  // ✅ 또는 navigate("/login")
+  } catch (err) {
+    console.error("로그아웃 실패", err);
+  }
+};
 
     const navigate = useNavigate();
-
+    
     useEffect(() => {
         const token = window.sessionStorage.getItem("access_token");
         if (token) {
@@ -26,7 +34,7 @@ function Layout() {
             setIsLogin(false);
         }
     });
-/*
+
     useEffect(() => {
         if(isLogin && location.pathname === "/userregform") {
             navigate("/list");
@@ -65,18 +73,18 @@ function Layout() {
 }
 
 function App() {
+    const [isLogin, setIsLogin] = useState(false);
     return (
         <>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Layout />}>
+                    <Route path="/" element={<Layout isLogin={isLogin} setIsLogin={setIsLogin} />}>
                         <Route path="/login" element={<Login />} />
                         <Route path="/regist" element={<Regist />} />
                         <Route path="/list" element={<List />} />
                         <Route path="/detail/:diary_id" element={<Detail />} />
                         <Route path="/diary/upload" element={<DiaryUpload />} />
                         <Route path="/oauth" element={<OauthHandler />} />
-                        <Route path="/userregform" element={<UserRegForm />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
